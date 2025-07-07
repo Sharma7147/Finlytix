@@ -335,10 +335,10 @@ export default function EnhancedExpensesDashboard() {
         { monthlyTrend = [] },
         { categoryBreakdown = [] },
       ] = await Promise.all([
-        fetchData('http://localhost:5000/api/expenses/analytics/items', month, selectedYear),
-        fetchData('http://localhost:5000/api/expenses/analytics/vendors', month, selectedYear),
-        fetchData('http://localhost:5000/api/expenses/analytics/monthly', month, selectedYear),
-        fetchData('http://localhost:5000/api/expenses/analytics/categories', month, selectedYear),
+        fetchData('https://finlytix-server.onrender.com/api/expenses/analytics/items', month, selectedYear),
+        fetchData('https://finlytix-server.onrender.com/api/expenses/analytics/vendors', month, selectedYear),
+        fetchData('https://finlytix-server.onrender.com/api/expenses/analytics/monthly', month, selectedYear),
+        fetchData('https://finlytix-server.onrender.com/api/expenses/analytics/categories', month, selectedYear),
       ]);
 
       setItemData(itemBreakdown);

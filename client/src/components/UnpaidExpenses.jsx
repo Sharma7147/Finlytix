@@ -43,7 +43,7 @@ const UnpaidExpenses = () => {
     setError(null);
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:5000/api/expenses/unpaid-or-partial', {
+      const response = await fetch('https://finlytix-server.onrender.com/api/expenses/unpaid-or-partial', {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -118,7 +118,7 @@ const UnpaidExpenses = () => {
 
   try {
     const token = localStorage.getItem('token');
-    const response = await fetch('http://localhost:5000/api/expenses/pay', {
+    const response = await fetch('https://finlytix-server.onrender.com/api/expenses/pay', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

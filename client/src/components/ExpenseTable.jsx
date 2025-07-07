@@ -17,7 +17,7 @@ const ExpenseTable = () => {
     const fetchExpenses = async () => {
       try {
         const token = localStorage.getItem('token');
-        const res = await axios.get('http://localhost:5000/api/expenses/analytics/table', {
+        const res = await axios.get('https://finlytix-server.onrender.com/api/expenses/analytics/table', {
           headers: {
             Authorization: `Bearer ${token}`,
           },

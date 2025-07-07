@@ -34,7 +34,7 @@ const AllExpenses = () => {
     setLoading(true);
     try {
       const token = localStorage.getItem('token');
-      let url = 'http://localhost:5000/api/expenses/all';
+      let url = 'https://finlytix-server.onrender.com/api/expenses/all';
       
       // Add query parameters if filters are set
       const params = new URLSearchParams();
@@ -84,7 +84,7 @@ const AllExpenses = () => {
   const handleExport = async () => {
     try {
       const token = localStorage.getItem('token');
-      const res = await fetch('http://localhost:5000/api/expenses/export', {
+      const res = await fetch('https://finlytix-server.onrender.com/api/expenses/export', {
         headers: { 'Authorization': `Bearer ${token}` },
       });
       const blob = await res.blob();

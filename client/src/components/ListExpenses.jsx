@@ -21,7 +21,7 @@ const ListExpenses = () => {
 
     const fetchExpenses = async () => {
       try {
-        const res = await fetch('http://localhost:5000/api/expenses', {
+        const res = await fetch('https://finlytix-server.onrender.com/api/expenses', {
           headers: { Authorization: `Bearer ${token}` }
         });
         const data = await res.json();
@@ -34,7 +34,7 @@ const ListExpenses = () => {
 
     const fetchReceipts = async () => {
       try {
-        const res = await fetch('http://localhost:5000/api/receipts/import');
+        const res = await fetch('https://finlytix-server.onrender.com/api/receipts/import');
         const data = await res.json();
         if (res.ok) setReceipts(data.receipts || []);
         else console.error(data.message);

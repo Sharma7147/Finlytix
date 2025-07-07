@@ -37,7 +37,7 @@ const AddIncomeForm = () => {
         receivedAmount: formData.paymentStatus === 'partial' ? Number(formData.receivedAmount) : null
       };
 
-      const res = await fetch('http://localhost:5000/income', {
+      const res = await fetch('https://finlytix-server.onrender.com/income', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

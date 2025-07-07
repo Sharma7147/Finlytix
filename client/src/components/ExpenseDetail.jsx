@@ -14,7 +14,7 @@ const ExpenseDetail = () => {
     const fetchExpense = async () => {
       try {
         const token = localStorage.getItem('token');
-        const res = await fetch(`http://localhost:5000/api/expenses/${id}`, {
+        const res = await fetch(`https://finlytix-server.onrender.com/api/expenses/${id}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         const data = await res.json();
@@ -37,7 +37,7 @@ const ExpenseDetail = () => {
     if (window.confirm('Are you sure you want to delete this expense?')) {
       try {
         const token = localStorage.getItem('token');
-        const res = await fetch(`http://localhost:5000/api/expenses/${id}`, {
+        const res = await fetch(`https://finlytix-server.onrender.com/api/expenses/${id}`, {
           method: 'DELETE',
           headers: { Authorization: `Bearer ${token}` }
         });

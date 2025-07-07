@@ -198,7 +198,7 @@ const AddExpense = () => {
         : []  
     };
 
-    const response = await fetch('http://localhost:5000/api/expenses/', {
+    const response = await fetch('https://finlytix-server.onrender.com/api/expenses/', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -248,7 +248,7 @@ const AddExpense = () => {
       formPayload.append('nextRecurrenceDate', formData.nextRecurrenceDate);
     }
 
-    const response = await fetch('http://localhost:5000/upload', {
+    const response = await fetch('https://finlytix-server.onrender.com/upload', {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${localStorage.getItem('token')}`,
