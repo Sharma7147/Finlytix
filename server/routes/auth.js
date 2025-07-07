@@ -4,7 +4,7 @@ const User = require('../models/User');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
-// @route   POST /register
+// @route   POST https://finlytix-server.onrender.com
 // @desc    Register a new user
 
 const authenticateToken = require('../middleware/auth');
@@ -35,14 +35,14 @@ router.post('/register', async (req, res) => {
 
     res.status(201).json({ message: 'User registered successfully', user: newUser });
   } catch (error) {
-    console.error('Error in /register:', error);
+    console.error('Error in Register:', error);
     res.status(500).json({ message: 'Server error' });
   }
 });
 
 
 
-// @route   POST /login
+// @route   POST https://finlytix-server.onrender.com
 // @desc    Login user and return basic info
 // Login route with JWT
 router.post('/login', async (req, res) => {
@@ -81,7 +81,7 @@ router.post('/login', async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Error in /login:', error);
+    console.error('Error in Login:', error);
     res.status(500).json({ message: 'Server error' });
   }
 });

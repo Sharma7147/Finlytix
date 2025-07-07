@@ -31,12 +31,6 @@ export default function App() {
        <Route path="/expenses/:id" element={<ExpenseDetail />} />
           <Route path="allexpenses" element={<AllExpenses />} />
           <Route path="income" element={<AddIncomeForm />} />
-
-
-
-
-
-
         </Route>
       </Routes>
     </Router>
