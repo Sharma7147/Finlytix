@@ -7,11 +7,22 @@ dotenv.config();
 const uploadRoutes = require('./routes/upload');
 const app = express();
 const PORT = 5000;
+const allowedOrigins = ['https://finlytix-y3gp.onrender.com'];
 
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true
+}));
 
 
 // Middleware
-app.use(cors());
+app.options('*', cors());
 app.use(express.json());
 app.use('/upload', uploadRoutes);
 
