@@ -17,5 +17,5 @@ module.exports = function validateRoutes(app) {
       }
       return original.call(this, path, ...handlers);
     };
-  });
+  })
 };
