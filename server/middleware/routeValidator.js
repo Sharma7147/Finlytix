@@ -1,4 +1,5 @@
-const { pathToRegexp } = require('../utils/safe-path-to-regexp');
+const { pathToRegexp } = require('../src/utils/safe-path-to-regexp');
+
 
 function validateRoutes(app) {
   const methods = ['get', 'post', 'put', 'delete', 'patch', 'options', 'head'];
