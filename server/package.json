@@ -13,6 +13,7 @@
   "description": "",
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
+    "path-to-regexp": "6.2.1",
     "safe-path-to-regexp": "file:./safe-path-to-regexp",
     "aws-sdk": "^2.1692.0",
     "bcrypt": "^5.1.1",
