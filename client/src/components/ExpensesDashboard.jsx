@@ -357,6 +357,8 @@ export default function EnhancedExpensesDashboard() {
     if (active && payload && payload.length) {
       const data = payload[0].payload;
       return (
+
+
         <CustomTooltip>
           <strong>{data.item || data.vendor || data.month || data.category}</strong>
           <span>Amount: {formatCurrency(data.totalAmount || data.total || 0)}</span>
@@ -428,6 +430,7 @@ export default function EnhancedExpensesDashboard() {
 
   if (loading && !refreshing) return (
     <DashboardContainer>
+      
       <Loading>
         <FiRefreshCw className="spin" />
         Loading your dashboard...

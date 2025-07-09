@@ -4,7 +4,7 @@ const User = require('../models/User');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
-// @route   POST https://finlytix-server.onrender.com
+// @route   POST https://finlytix-server.onrender.com/
 // @desc    Register a new user
 
 const authenticateToken = require('../middleware/auth');
@@ -42,7 +42,7 @@ router.post('/register', async (req, res) => {
 
 
 
-// @route   POST https://finlytix-server.onrender.com
+// @route   POST https://finlytix-server.onrender.com/
 // @desc    Login user and return basic info
 // Login route with JWT
 router.post('/login', async (req, res) => {
@@ -86,5 +86,10 @@ router.post('/login', async (req, res) => {
   }
 });
 
-
+// In your server routes (e.g., auth.js)
+router.post('/logout', (req, res) => {
+  // If you're using sessions, you might destroy the session here
+  // For JWT, the client just needs to remove the token
+  res.status(200).json({ message: 'Logged out successfully' });
+});
 module.exports = router;

@@ -1,14 +1,20 @@
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
-const authRoutes = require('./routes/auth'); // import route
-const dotenv=require('dotenv');
-dotenv.config();
-const uploadRoutes = require('./routes/upload');
-const app = express();
-const PORT = 5000;
-const allowedOrigins = ['https://finlytix-y3gp.onrender.com'];
+const dotenv = require('dotenv');
 
+dotenv.config();
+
+const app = express();
+const PORT = process.env.PORT || 5000;
+
+// ✅ Allowed frontend origins (Dev & Production)
+const allowedOrigins = [
+  'http://localhost:5173', // Vite frontend in development
+  'https://finlytix-y3gp.onrender.com', // Deployed frontend on Render
+];
+
+// ✅ CORS setup
 app.use(cors({
   origin: function (origin, callback) {
     if (!origin || allowedOrigins.includes(origin)) {
@@ -17,40 +23,48 @@ app.use(cors({
       callback(new Error('Not allowed by CORS'));
     }
   },
-  credentials: true
+  credentials: true, // Allow cookies and auth headers
 }));
 
-
-// Middleware
-app.options('*', cors());
+// ✅ Middleware
 app.use(express.json());
-app.use('/upload', uploadRoutes);
+app.options('*', cors()); // Preflight requests
 
-
-// Connect to MongoDB
+// ✅ MongoDB Connection
 mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })
-.then(() => console.log('MongoDB connected'))
-.catch((err) => console.error('MongoDB error:', err));
+  .then(() => console.log('✅ MongoDB connected'))
+  .catch((err) => console.error('❌ MongoDB connection error:', err));
 
-// Routes
+// ✅ Route Debug Logger (Optional)
+const originalUse = app.use.bind(app);
+app.use = function (path, ...handlers) {
+  if (typeof path === 'string') {
+    console.log('➡️  Registering route:', path);
+  }
+  return originalUse(path, ...handlers);
+};
+
+// ✅ Routes
+const authRoutes = require('./routes/auth');
+const uploadRoutes = require('./routes/upload');
+const expenseRoutes = require('./routes/expenses');
+const incomeRoutes = require('./routes/income');
+
+// ✅ Test Route
 app.get('/', (req, res) => {
   res.send('Hello from backend!');
 });
 
-
-
-// Use Auth Routes
-app.use('/api/auth', authRoutes); // all auth routes prefixed with /api/auth
-const expenseRoutes = require('./routes/expenses');
+// ✅ API Routes
+app.use('/api/auth', authRoutes);
+app.use('/upload', uploadRoutes);
 app.use('/api/expenses', expenseRoutes);
+app.use('/api/income', incomeRoutes);
 
-const incomeRoutes = require('./routes/income');
-app.use('/income', incomeRoutes);
-
-// Start Server
+// ✅ Start server
 app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+  console.log(`🚀 Server running at http://localhost:${PORT}`);
 });

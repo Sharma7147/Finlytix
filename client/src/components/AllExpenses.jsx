@@ -30,31 +30,37 @@ const AllExpenses = () => {
     fetchAllExpenses();
   }, []);
 
-  const fetchAllExpenses = async () => {
-    setLoading(true);
-    try {
-      const token = localStorage.getItem('token');
-      let url = 'https://finlytix-server.onrender.com/api/expenses/all';
-      
-      // Add query parameters if filters are set
-      const params = new URLSearchParams();
-      if (statusFilter !== 'all') params.append('status', statusFilter);
-      if (dateRange.start) params.append('startDate', dateRange.start);
-      if (dateRange.end) params.append('endDate', dateRange.end);
-      
-      if (params.toString()) url += `?${params.toString()}`;
+ const fetchAllExpenses = async () => {
+  setLoading(true);
+  try {
+    const token = localStorage.getItem('token');
+    let url = 'https://finlytix-server.onrender.com/api/expenses/all';
+    
+    const params = new URLSearchParams();
+    if (statusFilter !== 'all') params.append('status', statusFilter);
+    if (dateRange.start) params.append('startDate', dateRange.start);
+    if (dateRange.end) params.append('endDate', dateRange.end);
+    
+    if (params.toString()) url += `?${params.toString()}`;
 
-      const res = await fetch(url, {
-        headers: { 'Authorization': `Bearer ${token}` },
-      });
-      const data = await res.json();
-      if (res.ok) setExpenses(data.expenses);
-    } catch (error) {
-      console.error('Failed to load expenses:', error);
-    } finally {
-      setLoading(false);
+    const res = await fetch(url, {
+      headers: { 'Authorization': `Bearer ${token}` },
+    });
+    const data = await res.json();
+    
+    // Debug: Check returned data
+    console.log('Returned expenses:', data.expenses);
+    if (data.expenses && data.expenses.length > 0) {
+      console.log('First expense user ID:', data.expenses[0].user);
     }
-  };
+    
+    if (res.ok) setExpenses(data.expenses);
+  } catch (error) {
+    console.error('Failed to load expenses:', error);
+  } finally {
+    setLoading(false);
+  }
+};
 
   const filteredExpenses = expenses
     .filter(expense => {
@@ -84,7 +90,7 @@ const AllExpenses = () => {
   const handleExport = async () => {
     try {
       const token = localStorage.getItem('token');
-      const res = await fetch('https://finlytix-server.onrender.com/api/expenses/export', {
+      const res = await fetch('http:localhost:5000/api/expenses/export', {
         headers: { 'Authorization': `Bearer ${token}` },
       });
       const blob = await res.blob();

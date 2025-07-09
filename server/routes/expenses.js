@@ -385,7 +385,7 @@ router.get('/analytics/table', authenticateToken, async (req, res) => {
     );
 
     res.json({ expenses: tableData });
-    console.log(expenses)
+    
   } catch (err) {
     console.error('Error fetching table data:', err);
     res.status(500).json({ message: 'Server error' });
@@ -403,7 +403,7 @@ router.get('/unpaid-or-partial', authenticateToken, async (req, res) => {
       userId: req.user.id,
       paymentStatus: { $in: ['unpaid', 'partially_paid'] }
     };
-    
+    console.log(req.user.id)
     if (status && ['unpaid', 'partially_paid'].includes(status)) {
       query.paymentStatus = status;
     }
@@ -429,8 +429,8 @@ router.get('/unpaid-or-partial', authenticateToken, async (req, res) => {
 router.get('/all', authenticateToken, async (req, res) => {
   try {
     const { status, startDate, endDate } = req.query;
-    const query = { user: req.user._id };
-
+    const query = { userId: req.user.id };
+console.log(query)
     if (status && status !== 'all') query.paymentStatus = status;
     if (startDate || endDate) {
       query.date = {};
@@ -438,10 +438,11 @@ router.get('/all', authenticateToken, async (req, res) => {
       if (endDate) query.date.$lte = new Date(endDate);
     }
 
-    const expenses = await ExpenseEntry.find(query)
-      .sort({ date: -1 })
-      .populate('items.category', 'name')
-      .lean();
+    const expenses = await ExpenseEntry.find(query )
+  .sort({ date: -1 })
+  .populate('items.category', 'name')
+  .lean();
+
 
     res.json({ expenses });
   } catch (error) {

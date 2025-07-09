@@ -48,7 +48,6 @@ const AddExpense = () => {
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     
-    // When payment status changes, handle paid amount accordingly
     if (name === 'paymentStatus') {
       setFormData(prev => ({
         ...prev,
@@ -57,7 +56,6 @@ const AddExpense = () => {
                    value === 'partially_paid' ? prev.paidAmount || '' : ''
       }));
     } else if (name === 'amount' && formData.paymentStatus === 'paid') {
-      // If amount changes and status is paid, update paidAmount too
       setFormData(prev => ({
         ...prev,
         [name]: value,
@@ -113,7 +111,6 @@ const AddExpense = () => {
     setError('');
     setIsSubmitting(true);
 
-    // Validate form
     if (mode === 'manual' && !formData.item) {
       setError('Item name is required');
       setIsSubmitting(false);
@@ -158,7 +155,6 @@ const AddExpense = () => {
   };
 
   const submitManualExpense = async () => {
-    // Calculate paid amount based on status
     const paidAmount = formData.paymentStatus === 'paid' 
       ? Number(formData.amount) 
       : formData.paymentStatus === 'partially_paid' 
@@ -217,25 +213,22 @@ const AddExpense = () => {
   const submitFileUpload = async () => {
     if (!file) throw new Error('Please select a file');
 
-    const paidAmount = formData.paymentStatus === 'paid' 
-      ? Number(formData.amount) 
-      : formData.paymentStatus === 'partially_paid' 
-        ? Number(formData.paidAmount) 
-        : 0;
-
     const formPayload = new FormData();
     formPayload.append('file', file);
     formPayload.append('paymentStatus', formData.paymentStatus);
-    formPayload.append('paymentMethod', formData.paymentMethod);
+    
+    if (formData.paymentStatus !== 'unpaid') {
+      formPayload.append('paymentMethod', formData.paymentMethod);
+    }
+    
     formPayload.append('notes', formData.notes);
 
-    if (formData.paymentStatus !== 'unpaid') {
-      formPayload.append('payments', JSON.stringify([{
-        amount: paidAmount,
-        method: formData.paymentMethod,
-        date: new Date(),
-        recordedBy: localStorage.getItem('userId')
-      }]));
+    if (formData.paymentStatus === 'paid') {
+      formPayload.append('amount', formData.amount);
+    }
+
+    if (formData.paymentStatus === 'partially_paid') {
+      formPayload.append('paidAmount', formData.paidAmount);
     }
 
     if (['partially_paid', 'unpaid'].includes(formData.paymentStatus)) {
@@ -275,7 +268,6 @@ const AddExpense = () => {
         <p className="text-gray-600 mt-2">Track your business expenditures</p>
       </div>
 
-      {/* Mode Toggle */}
       <div className="flex mb-6 bg-gray-100 p-1 rounded-lg">
         {['manual', 'upload'].map(m => (
           <button
@@ -292,7 +284,6 @@ const AddExpense = () => {
       <form onSubmit={handleSubmit} className="space-y-5">
         {mode === 'manual' ? (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-            {/* Basic Expense Fields */}
             <div className="col-span-2">
               <label className="block text-sm font-medium text-gray-700 mb-1">Item Name *</label>
               <input
@@ -370,7 +361,6 @@ const AddExpense = () => {
               />
             </div>
 
-            {/* Payment Information */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Payment Status</label>
               <select
@@ -412,7 +402,7 @@ const AddExpense = () => {
                   <input
                     type="number"
                     name="paidAmount"
-                    value={formData.amount} // Paid amount equals full amount for paid status
+                    value={formData.amount}
                     readOnly
                     className="w-full pl-8 px-4 py-2 border border-gray-300 rounded-lg bg-gray-100"
                   />
@@ -454,7 +444,6 @@ const AddExpense = () => {
               </div>
             )}
 
-            {/* Recurring Expense */}
             <div className="col-span-2 flex items-center">
               <input
                 type="checkbox"
@@ -502,7 +491,6 @@ const AddExpense = () => {
               </>
             )}
 
-            {/* Notes */}
             <div className="col-span-2">
               <label className="block text-sm font-medium text-gray-700 mb-1">Notes</label>
               <textarea
@@ -531,7 +519,6 @@ const AddExpense = () => {
               {fileName && <p className="text-sm text-gray-700 mt-2">Selected file: {fileName}</p>}
             </div>
 
-            {/* Payment fields for upload mode */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Payment Status</label>
               <select
@@ -585,41 +572,23 @@ const AddExpense = () => {
             )}
 
             {formData.paymentStatus === 'partially_paid' && (
-              <>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Total Amount *</label>
-                  <div className="relative">
-                    <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">$</span>
-                    <input
-                      type="number"
-                      name="amount"
-                      value={formData.amount}
-                      onChange={handleChange}
-                      required
-                      step="0.01"
-                      min="0"
-                      className="w-full pl-8 px-4 py-2 border border-gray-300 rounded-lg"
-                    />
-                  </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Paid Amount *</label>
+                <div className="relative">
+                  <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">$</span>
+                  <input
+                    type="number"
+                    name="paidAmount"
+                    value={formData.paidAmount}
+                    onChange={handleChange}
+                    required
+                    min="0"
+                    step="0.01"
+                    className="w-full pl-8 px-4 py-2 border border-gray-300 rounded-lg"
+                  />
                 </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Paid Amount *</label>
-                  <div className="relative">
-                    <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">$</span>
-                    <input
-                      type="number"
-                      name="paidAmount"
-                      value={formData.paidAmount}
-                      onChange={handleChange}
-                      required
-                      min="0"
-                      max={formData.amount}
-                      step="0.01"
-                      className="w-full pl-8 px-4 py-2 border border-gray-300 rounded-lg"
-                    />
-                  </div>
-                </div>
-              </>
+                <p className="text-xs text-gray-500 mt-1">Total amount will be extracted from the receipt</p>
+              </div>
             )}
 
             {['partially_paid', 'unpaid'].includes(formData.paymentStatus) && (
@@ -636,7 +605,6 @@ const AddExpense = () => {
               </div>
             )}
 
-            {/* Recurring for upload mode */}
             <div className="flex items-center">
               <input
                 type="checkbox"
@@ -684,7 +652,6 @@ const AddExpense = () => {
               </>
             )}
 
-            {/* Notes for upload mode */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Notes</label>
               <textarea
