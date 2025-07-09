@@ -5,6 +5,17 @@ const ExpenseEntry = require('../models/ExpenseEntry');
 const authenticateToken = require('../middleware/auth');
 const mongoose = require('mongoose');
 
+
+
+
+router.get('/:userId', async (req, res) => {
+  try {
+    const expenses = await Expense.find({ userId: req.params.userId });
+    res.json(expenses);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
 // Util: Ensure ObjectId type
 const getUserId = (id) => {
   return typeof id === 'string' ? new mongoose.Types.ObjectId(id) : id;

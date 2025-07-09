@@ -2,12 +2,15 @@ const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
-
+const validateRoutes = require('./middleware/routeValidator'); // Add this line
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+if (process.env.NODE_ENV === 'development') {
+  validateRoutes(app);
+}
 // ✅ Allowed frontend origins (Dev & Production)
 const allowedOrigins = [
   'http://localhost:5173', // Vite frontend in development
